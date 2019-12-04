@@ -30,11 +30,27 @@ var inputField = d3.select("#input-field");
 
 // input field to trigger the date change event
 inputField.on("change", function() {
-  var dateNumber = d3.event.target.valueAsNumber;
-  console.log(dateNumber);
-  // var new_tbody = document.createElement('tbody');
-  table.node().value()="";
-  // d3.select("tbody").selectAll("tr").drop();
+  var d1 = d3.event.target.value;
+  console.log(d1);
+  // remove all rows from the table
+  tbody.selectAll("tr").remove();
+  // append rows that match the given date input
+  tableData.forEach((ufoSighting) => {
+    // console.log(ufoSighting.datetime);
+    var d2 = new Date(ufoSighting.datetime);
+    var dateString = new Date(d2.getTime() - (d2.getTimezoneOffset() * 60000 ))
+                        .toISOString()
+                        .split("T")[0];
+    console.log(dateString);
+    // console.log(d2);
+    if (d1 === dateString) {
+      var row = tbody.append("tr");
+      Object.entries(ufoSighting).forEach(([key, value]) => {
+        var cell = row.append("td");
+        cell.text(value);
+      })
+    }
+  })
 });
 //
 // // Input fields can trigger a change event when new text is entered.
